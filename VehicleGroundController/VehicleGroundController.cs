@@ -1,6 +1,7 @@
 ﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace VehicleGroundController
@@ -9,6 +10,20 @@ namespace VehicleGroundController
     {
         public Random random;
         public bool Developer = true;
+
+        public MaterialHash[] AvaiableHashes = new MaterialHash[]
+        {
+            MaterialHash.Tarmac,
+            MaterialHash.Concrete,
+            MaterialHash.Brick,
+            MaterialHash.Unk,
+            MaterialHash.DirtTrack,
+            MaterialHash.RumbleStrip,
+            MaterialHash.ConcreteDusty,
+            MaterialHash.MetalSolidSmall,
+            MaterialHash.MetalSolidRoadSurface,
+            MaterialHash.TarmacPainted
+        };
 
         public MaterialHash surface;
         public VehicleGroundController()
@@ -42,12 +57,15 @@ namespace VehicleGroundController
                         surface = hash;
                     }
 
-                    if (hash != MaterialHash.Tarmac && hash != MaterialHash.Concrete)
+                    if (!AvaiableHashes.Contains(hash))
                     {
                         API.SetVehicleSteerBias(LocalPlayer.Character.CurrentVehicle.Handle, Convert.ToSingle(-2 * random.NextDouble() + 1));
-                        API.SetVehicleHandbrake(LocalPlayer.Character.CurrentVehicle.Handle, true);
-                        await Delay(random.Next(10, 50));
-                        API.SetVehicleHandbrake(LocalPlayer.Character.CurrentVehicle.Handle, false);
+                        if (API.GetVehicleMaxSpeed(LocalPlayer.Character.CurrentVehicle.Handle) * 0.10 < LocalPlayer.Character.CurrentVehicle.Speed)
+                        {
+                            API.SetVehicleHandbrake(LocalPlayer.Character.CurrentVehicle.Handle, true);
+                            await Delay(random.Next(10, 50));
+                            API.SetVehicleHandbrake(LocalPlayer.Character.CurrentVehicle.Handle, false);
+                        }
                     }
                 }
             }

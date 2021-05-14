@@ -2,7 +2,7 @@ fx_version 'cerulean'
 games { 'gta5' }
 
 author 'Alosha'
-description 'AdvancedVehicleController'
+description 'VehicleGroundController'
 version '1.0.0'
 
-client_script 'AdvancedVehicleController.net.dll'
+client_script 'VehicleGroundController.net.dll'
