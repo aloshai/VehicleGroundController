@@ -26,6 +26,8 @@ namespace VehicleGroundController
         };
 
         public MaterialHash surface;
+
+        public bool ForcedWheel;
         public VehicleGroundController()
         {
             EventHandlers["onClientResourceStart"] += new Action<string>(OnClientResourceStart);
@@ -59,18 +61,17 @@ namespace VehicleGroundController
 
                     if (!AvaiableHashes.Contains(hash))
                     {
-                        API.SetVehicleSteerBias(LocalPlayer.Character.CurrentVehicle.Handle, Convert.ToSingle(-2 * random.NextDouble() + 1));
                         if (API.GetVehicleMaxSpeed(LocalPlayer.Character.CurrentVehicle.Handle) * 0.10 < LocalPlayer.Character.CurrentVehicle.Speed)
                         {
                             API.SetVehicleHandbrake(LocalPlayer.Character.CurrentVehicle.Handle, true);
-                            await Delay(random.Next(10, 50));
+                            await Delay(100);
                             API.SetVehicleHandbrake(LocalPlayer.Character.CurrentVehicle.Handle, false);
                         }
+                        API.SetVehicleSteerBias(LocalPlayer.Character.CurrentVehicle.Handle, LocalPlayer.Character.CurrentVehicle.SteeringAngle -
+                                                                                             (random.Next(-30, 30) / 100));
                     }
                 }
             }
-
-            await Delay(0);
         }
 
         public MaterialHash GetGroundHash(Vehicle vehicle)
